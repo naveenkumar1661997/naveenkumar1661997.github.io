@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naveen Kumar | Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #050816;
+      color: white;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,0.25), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(34,211,238,0.2), transparent 20%);
+      z-index: -2;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    section {
+      padding: 90px 8%;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .tag {
+      color: #22d3ee;
+      letter-spacing: 5px;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+      font-size: 14px;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hero h1 {
+      font-size: 5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg,#22d3ee,#3b82f6,#a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      max-width: 850px;
+      font-size: 1.2rem;
+    }
+
+    .btn-group {
+      margin-top: 40px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+      transition: 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #06b6d4;
+      box-shadow: 0 0 20px rgba(34,211,238,0.4);
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+    }
+
+    .stats {
+      margin-top: 70px;
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+    }
+
+    .card,
+    .skill-card,
+    .stat-card,
+    .interest-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      backdrop-filter: blur(10px);
+      transition: 0.3s ease;
+    }
+
+    .card:hover,
+    .skill-card:hover,
+    .stat-card:hover,
+    .interest-card:hover {
+      transform: translateY(-8px);
+      border-color: #22d3ee;
+    }
+
+    .stat-card {
+      padding: 25px;
+      text-align: center;
+    }
+
+    .stat-number {
+      color: #22d3ee;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 3rem;
+      color: #22d3ee;
+      margin-bottom: 60px;
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .about-image {
+      height: 420px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(168,85,247,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7rem;
+    }
+
+    .about-content p {
+      color: #cbd5e1;
+      font-size: 1.05rem;
+    }
+
+    .skills-grid,
+    .projects-grid,
+    .interest-grid {
+      display: grid;
+      gap: 25px;
+    }
+
+    .skills-grid {
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    }
+
+    .skill-card {
+      padding: 30px;
+      text-align: center;
+    }
+
+    .skill-card .icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .timeline {
+      border-left: 2px solid #22d3ee;
+      padding-left: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .card {
+      padding: 35px;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #22d3ee;
+      left: -42px;
+      top: 40px;
+      box-shadow: 0 0 20px #22d3ee;
+    }
+
+    .card h3 {
+      color: #22d3ee;
+      margin-bottom: 10px;
+    }
+
+    .card p,
+    .card li {
+      color: #cbd5e1;
+    }
+
+    .projects-grid {
+      grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    }
+
+    .project-image {
+      height: 220px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(168,85,247,0.2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+
+    .interest-grid {
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+    }
+
+    .interest-card {
+      padding: 35px;
+      text-align: center;
+    }
+
+    .interest-card .emoji {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .contact {
+      text-align: center;
+    }
+
+    .contact p {
+      color: #cbd5e1;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #94a3b8;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media(max-width: 900px) {
+      .hero h1 {
+        font-size: 3.5rem;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 2.4rem;
+      }
+    }
+
+    @media(max-width: 600px) {
+      section {
+        padding: 70px 6%;
+      }
+
+      .hero h1 {
+        font-size: 2.7rem;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-group {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="tag">SENIOR SOFTWARE ENGINEER</div>
+
+    <h1>Naveen Kumar</h1>
+
+    <p>
+      Java • PostgreSQL • AWS • Airflow<br>
+      Building scalable enterprise automation and cloud-driven backend solutions.
+    </p>
+
+    <div class="btn-group">
+      <a href="mailto:naveenkumar1661997@gmail.com" class="btn btn-primary">Contact Me</a>
+      <a href="#projects" class="btn btn-secondary">View Projects</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-number">4+</div>
+        <div>Years Experience</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number">100+</div>
+        <div>Tickets Resolved</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number">20+</div>
+        <div>Automation Jobs</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-number">Multi</div>
+        <div>Enterprise Clients</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">About Me</h2>
+
+    <div class="about">
+      <div class="about-image">👨‍💻</div>
+
+      <div class="about-content">
+        <p>
+          Experienced Software Engineer with expertise in enterprise application support,
+          backend systems, cloud monitoring, workflow automation, and production issue resolution.
+          Passionate about solving real-world business challenges using Java, PostgreSQL,
+          Python, AWS CloudWatch, and Apache Airflow.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Technical Skills</h2>
+
+    <div class="skills-grid">
+      <div class="skill-card"><div class="icon">💻</div>Java</div>
+      <div class="skill-card"><div class="icon">🗄️</div>PostgreSQL</div>
+      <div class="skill-card"><div class="icon">🐍</div>Python</div>
+      <div class="skill-card"><div class="icon">☁️</div>AWS CloudWatch</div>
+      <div class="skill-card"><div class="icon">⚙️</div>Apache Airflow</div>
+      <div class="skill-card"><div class="icon">🚀</div>Flyway</div>
+      <div class="skill-card"><div class="icon">📋</div>JIRA</div>
+      <div class="skill-card"><div class="icon">🛠️</div>WildFly</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Experience</h2>
+
+    <div class="timeline">
+      <div class="card">
+        <h3>Senior Software Engineer – L3 Support</h3>
+        <p><strong>SmartStream Technologies</strong> | Jan 2025 – Present</p>
+        <ul>
+          <li>Resolved enterprise production issues using Java & PostgreSQL.</li>
+          <li>Automated workflows using Airflow and Python.</li>
+          <li>Handled deployments and upgrades through WildFly.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Software Engineer</h3>
+        <p><strong>SmartStream Technologies</strong> | Jan 2023 – Dec 2024</p>
+        <ul>
+          <li>Built Airflow DAGs for multiple client environments.</li>
+          <li>Led JIRA ticket management and issue tracking.</li>
+          <li>Conducted knowledge transfer sessions.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2 class="section-title">Projects</h2>
+
+    <div class="projects-grid">
+      <div class="card">
+        <div class="project-image">🚀</div>
+        <h3>Enterprise Automation Platform</h3>
+        <p>Java • Airflow • PostgreSQL</p>
+      </div>
+
+      <div class="card">
+        <div class="project-image">☁️</div>
+        <h3>Cloud Monitoring Dashboard</h3>
+        <p>AWS CloudWatch • Python</p>
+      </div>
+
+      <div class="card">
+        <div class="project-image">⚡</div>
+        <h3>Deployment Automation System</h3>
+        <p>WildFly • Flyway • Shell</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Interests</h2>
+
+    <div class="interest-grid">
+      <div class="interest-card">
+        <div class="emoji">🏸</div>
+        <h3>Badminton</h3>
+      </div>
+
+      <div class="interest-card">
+        <div class="emoji">🏓</div>
+        <h3>Table Tennis</h3>
+      </div>
+
+      <div class="interest-card">
+        <div class="emoji">🏍️</div>
+        <h3>Bike Rides</h3>
+      </div>
+
+      <div class="interest-card">
+        <div class="emoji">✈️</div>
+        <h3>Traveling</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <h2 class="section-title">Contact</h2>
+
+    <p>📧 naveenkumar1661997@gmail.com</p>
+    <p>📱 +91 8861254693</p>
+    <p>📍 Bengaluru, India</p>
+  </section>
+
+  <footer>
+    © 2026 Naveen Kumar • Portfolio Website
+  </footer>
+
+</body>
+</html>
