@@ -2,12 +2,25 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Naveen Kumar | Senior Software Engineer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* iOS/Android inflate text size differently per element (especially inside
+       flex/grid containers with letter-spacing) — this is the #1 cause of
+       "characters not aligned" on mobile. Locking text-size-adjust fixes it. */
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      overflow-x: hidden;
+      width: 100%;
+    }
+    a, button { -webkit-tap-highlight-color: transparent; }
+    button { font-family: inherit; -webkit-appearance: none; appearance: none; }
+    img, svg { max-width: 100%; display: block; }
 
     :root {
       --bg:       #0B0F14;
@@ -45,6 +58,8 @@
       font-size: 16px;
       line-height: 1.7;
       overflow-x: hidden;
+      max-width: 100vw;
+      -webkit-font-smoothing: antialiased;
       transition: background 0.3s, color 0.3s;
     }
 
@@ -52,8 +67,9 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 5vw;
+      padding: 14px max(5vw, env(safe-area-inset-right)) 14px max(5vw, env(safe-area-inset-left));
       background: rgba(11,15,20,0.88);
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       transition: background 0.3s;
@@ -62,6 +78,8 @@
     .nav-brand {
       display: flex; align-items: center; gap: 10px;
       text-decoration: none;
+      min-width: 0;
+      flex-shrink: 1;
     }
     .nav-avatar {
       width: 40px; height: 40px; border-radius: 50%;
@@ -76,8 +94,11 @@
       color: var(--accent);
       letter-spacing: 0.1em;
       font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
     .nav-links { display: flex; gap: 0.2rem; list-style: none; }
     .nav-links a {
       display: flex; align-items: center; gap: 6px;
@@ -88,10 +109,62 @@
       color: var(--muted);
       text-decoration: none;
       border-radius: 6px;
+      white-space: nowrap;
       transition: color 0.2s, background 0.2s;
     }
     .nav-links a:hover { color: var(--accent); background: rgba(0,194,255,0.07); }
     .nav-links a i { font-size: 0.72rem; }
+
+    /* Hamburger (mobile only) */
+    .nav-burger {
+      display: none;
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      align-items: center; justify-content: center;
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .nav-burger.active { border-color: var(--accent); color: var(--accent); }
+
+    /* Dimmed backdrop behind the mobile panel — tapping it (or anywhere
+       outside the panel) closes the menu, same as tapping the icon again */
+    .nav-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 95;
+      background: rgba(0,0,0,0.45);
+      cursor: pointer;
+      -webkit-backdrop-filter: blur(2px);
+      backdrop-filter: blur(2px);
+    }
+    .nav-overlay.show { display: block; }
+
+    /* Mobile dropdown panel */
+    .nav-mobile-panel {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0; z-index: 99;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px max(5vw, env(safe-area-inset-left));
+      flex-direction: column;
+      box-shadow: var(--shadow);
+    }
+    .nav-mobile-panel.open { display: flex; }
+    .nav-mobile-panel a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 6px;
+      font-size: 0.92rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-mobile-panel a:last-child { border-bottom: none; }
+    .nav-mobile-panel a i { width: 18px; color: var(--accent); font-size: 0.9rem; }
 
     /* Theme Toggle */
     .theme-toggle {
@@ -105,6 +178,7 @@
       font-size: 0.9rem;
       transition: all 0.2s;
       margin-left: 8px;
+      flex-shrink: 0;
     }
     .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -121,6 +195,8 @@
       border-radius: 6px;
       cursor: pointer;
       text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: background 0.2s, transform 0.2s;
       margin-left: 8px;
     }
@@ -178,6 +254,7 @@
     /* ── HERO ── */
     #hero {
       min-height: 100vh;
+      min-height: 100svh; /* fixes iOS/Android dynamic address-bar overlap */
       display: flex; align-items: center;
       padding: 120px 6vw 80px;
       position: relative; overflow: hidden;
@@ -189,6 +266,7 @@
         linear-gradient(90deg, var(--border) 1px, transparent 1px);
       background-size: 60px 60px;
       opacity: 0.25;
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
       mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
     }
     .hero-glow {
@@ -213,9 +291,10 @@
     .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 520px; margin-bottom: 2.5rem; line-height: 1.8; }
     .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 12px 22px; font-family: var(--ff-body); font-size: 0.85rem;
       font-weight: 600; letter-spacing: 0.04em; text-decoration: none;
+      white-space: nowrap;
       border-radius: 6px; transition: all 0.2s; cursor: pointer; border: none;
     }
     .btn-primary { background: var(--accent); color: #000; }
@@ -231,11 +310,16 @@
       display: flex; gap: 3rem; margin-top: 4rem;
       padding-top: 2.5rem; border-top: 1px solid var(--border); flex-wrap: wrap;
     }
+    .stat-item { min-width: 0; }
     .stat-num {
       font-family: var(--ff-head); font-size: 2.5rem; font-weight: 700;
       color: var(--accent); line-height: 1;
     }
-    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+    .stat-label {
+      font-size: 0.72rem; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-top: 4px; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px;
+    }
 
     /* ── SECTIONS ── */
     section { padding: 100px 6vw; }
@@ -265,18 +349,19 @@
       transition: border-color 0.2s;
     }
     .detail-row:hover { border-color: var(--accent); }
+    .detail-row > div:last-child { min-width: 0; flex: 1; }
     .detail-icon {
       width: 34px; height: 34px; border-radius: 7px;
       background: rgba(0,194,255,0.1); display: grid; place-items: center;
       color: var(--accent); font-size: 0.9rem; flex-shrink: 0;
     }
     .detail-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); }
-    .detail-value { font-size: 0.88rem; color: var(--text); }
+    .detail-value { font-size: 0.88rem; color: var(--text); overflow-wrap: anywhere; word-break: break-word; }
     .detail-value a { color: var(--accent); text-decoration: none; }
     .detail-value a:hover { text-decoration: underline; }
 
     /* ── SKILLS ── */
-    .skills-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .skills-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 1.5rem; }
     .skill-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 12px; padding: 1.75rem;
@@ -313,9 +398,9 @@
     .timeline-connector { width: 1px; flex: 1; background: var(--border); margin-top: 8px; }
     .timeline-item:last-child .timeline-connector { display: none; }
     .tl-role { font-family: var(--ff-head); font-size: 1.18rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .tl-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; }
-    .tl-company { font-size: 0.78rem; color: var(--accent); font-family: var(--ff-mono); letter-spacing: 0.08em; }
-    .tl-location { font-size: 0.72rem; color: var(--dim); display: flex; align-items: center; gap: 4px; }
+    .tl-meta { display: flex; align-items: center; gap: 8px 14px; margin-bottom: 1rem; flex-wrap: wrap; }
+    .tl-company { font-size: 0.78rem; color: var(--accent); font-family: var(--ff-mono); letter-spacing: 0.08em; white-space: nowrap; }
+    .tl-location { font-size: 0.72rem; color: var(--dim); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
     .tl-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .tl-list li { font-size: 0.87rem; color: var(--muted); padding-left: 1.3rem; position: relative; line-height: 1.65; }
     .tl-list li::before { content: "\f054"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; color: var(--accent2); font-size: 0.55rem; top: 5px; }
@@ -326,7 +411,7 @@
     .tl-achievements li::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; left: 0; color: var(--accent2); font-size: 0.62rem; top: 4px; }
 
     /* ── PROJECTS ── */
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 1.5rem; }
     .project-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 12px; padding: 2rem;
@@ -369,14 +454,17 @@
       display: flex; align-items: center; gap: 12px;
       text-decoration: none; transition: border-color 0.2s, transform 0.2s;
       min-width: 190px;
+      max-width: 100%;
+      flex: 1 1 190px;
     }
     .contact-card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .contact-icon { width: 36px; height: 36px; border-radius: 8px; display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; }
     .contact-icon.email { background: rgba(0,194,255,0.1); color: var(--accent); }
     .contact-icon.phone { background: rgba(110,231,183,0.1); color: var(--accent2); }
     .contact-icon.linkedin { background: rgba(10,102,194,0.12); color: #0A66C2; }
+    .contact-card > div { min-width: 0; text-align: left; }
     .contact-card-label { font-size: 0.68rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; }
-    .contact-card-value { font-size: 0.85rem; color: var(--text); }
+    .contact-card-value { font-size: 0.85rem; color: var(--text); overflow-wrap: anywhere; word-break: break-word; }
 
     /* ── FOOTER ── */
     footer { text-align: center; padding: 2rem 6vw; border-top: 1px solid var(--border); font-family: var(--ff-mono); font-size: 0.72rem; color: var(--dim); }
@@ -385,19 +473,79 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .nav-links { display: none; }
+      .nav-burger { display: flex; }
     }
     @media (max-width: 768px) {
       nav { padding: 12px 4vw; }
-      section { padding: 70px 5vw; }
+      .nav-name { max-width: 38vw; }
+      section { padding: 70px 5vw; overflow-x: hidden; }
+      .hero-inner { max-width: 100%; }
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .timeline-item { grid-template-columns: 0 1px 1fr; gap: 0 1.2rem; }
+      .timeline-item { grid-template-columns: 1px 1fr; gap: 0 1.2rem; }
       .timeline-date { display: none; }
       .edu-grid { grid-template-columns: 1fr; }
-      .hero-stats { gap: 2rem; }
+      .hero-stats { gap: 1.75rem 2rem; }
       .floating-contacts { display: none; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; }
+      .contact-cards { flex-direction: column; align-items: stretch; }
+      .contact-card { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      nav { padding: 10px 4vw; }
+      .nav-avatar { width: 34px; height: 34px; }
+      .nav-name { display: none; } /* avoid crowding avatar + burger + toggle + download */
+      .nav-download span.btn-text { display: none; }
+      .nav-download { padding: 8px 10px; }
+      section { padding: 56px 5.5vw; }
+      .hero-tag { font-size: 0.68rem; }
+      h1 { font-size: clamp(2.5rem, 13vw, 3.4rem); }
+      .hero-sub { font-size: 0.95rem; }
+      .hero-stats { gap: 1.4rem 1.8rem; margin-top: 2.6rem; padding-top: 1.8rem; }
+      .stat-num { font-size: 2rem; }
+      h2 { font-size: 1.7rem; }
+      .skill-card, .project-card, .edu-card { padding: 1.35rem; }
+      .tl-role { font-size: 1.05rem; }
+      .detail-row { padding: 11px 13px; gap: 0.75rem; }
+      .nav-mobile-panel { top: 55px; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
+  <script>
+    // Mobile nav: tap the icon to open. Tap the icon again, tap the dimmed
+    // backdrop, tap any link, OR tap anywhere else on the page to close.
+    function openMobileNav() {
+      document.getElementById('navMobilePanel').classList.add('open');
+      document.getElementById('navOverlay').classList.add('show');
+      document.querySelector('.nav-burger').classList.add('active');
+      document.querySelector('.nav-burger i').className = 'fa-solid fa-xmark';
+    }
+    function closeMobileNav() {
+      document.getElementById('navMobilePanel').classList.remove('open');
+      document.getElementById('navOverlay').classList.remove('show');
+      document.querySelector('.nav-burger').classList.remove('active');
+      document.querySelector('.nav-burger i').className = 'fa-solid fa-bars';
+    }
+    function toggleMobileNav(evt) {
+      if (evt) evt.stopPropagation();
+      const panel = document.getElementById('navMobilePanel');
+      panel.classList.contains('open') ? closeMobileNav() : openMobileNav();
+    }
+    // Close on tap anywhere outside the open panel (and outside the burger
+    // button itself, which has its own toggle handler)
+    document.addEventListener('click', function (evt) {
+      const panel = document.getElementById('navMobilePanel');
+      const burger = document.querySelector('.nav-burger');
+      if (!panel || !panel.classList.contains('open')) return;
+      if (!panel.contains(evt.target) && !burger.contains(evt.target)) {
+        closeMobileNav();
+      }
+    });
+    // Close on Escape for keyboard users
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === 'Escape') closeMobileNav();
+    });
+  </script>
 </head>
 <body>
 
@@ -453,10 +601,29 @@
         <i class="fa-solid fa-moon"></i>
       </button>
       <a class="nav-download" id="resumeDownload" href="#" download="Naveen_Kumar_Resume.pdf">
-        <i class="fa-solid fa-download"></i> Resume
+        <i class="fa-solid fa-download"></i> <span class="btn-text">Resume</span>
       </a>
+      <button class="nav-burger" onclick="toggleMobileNav(event)" title="Menu" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
   </nav>
+
+  <!-- Dimmed backdrop — tapping anywhere on it closes the mobile menu -->
+  <div class="nav-overlay" id="navOverlay" onclick="closeMobileNav()"></div>
+
+  <!-- MOBILE NAV PANEL -->
+  <div class="nav-mobile-panel" id="navMobilePanel">
+    <a href="#about" onclick="closeMobileNav()"><i class="fa-solid fa-user"></i> About</a>
+    <a href="#skills" onclick="closeMobileNav()"><i class="fa-solid fa-code"></i> Skills</a>
+    <a href="#experience" onclick="closeMobileNav()"><i class="fa-solid fa-briefcase"></i> Experience</a>
+    <a href="#education" onclick="closeMobileNav()"><i class="fa-solid fa-graduation-cap"></i> Education</a>
+    <a href="#projects" onclick="closeMobileNav()"><i class="fa-solid fa-diagram-project"></i> Projects</a>
+    <a href="#contact" onclick="closeMobileNav()"><i class="fa-solid fa-envelope"></i> Contact</a>
+    <a href="tel:+918861254693" onclick="closeMobileNav()"><i class="fa-solid fa-phone"></i> +91 88612 54693</a>
+    <a href="mailto:naveenkumar1661997@gmail.com" onclick="closeMobileNav()"><i class="fa-solid fa-envelope-open-text"></i> Email Naveen</a>
+    <a href="https://www.linkedin.com/in/naveen-kumar-1a5832148" target="_blank" rel="noopener" onclick="closeMobileNav()"><i class="fa-brands fa-linkedin-in"></i> LinkedIn Profile</a>
+  </div>
 
   <!-- FLOATING CONTACTS -->
   <div class="floating-contacts">
@@ -503,7 +670,7 @@
           <div class="stat-label"><i class="fa-solid fa-gears"></i> Automation jobs</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num">1000+</div>
+          <div class="stat-num">2000+</div>
           <div class="stat-label"><i class="fa-solid fa-circle-check"></i> Incidents resolved</div>
         </div>
       </div>
@@ -619,8 +786,10 @@
         <div class="skill-items">
           <span class="skill-tag">Claude</span>
           <span class="skill-tag">Amazon Q</span>
-          <span class="skill-tag">GitHub Copilot</span>
+          <span class="skill-tag">Copilot</span>
           <span class="skill-tag">Rovo</span>
+          <span class="skill-tag">ChatGPT</span>
+          <span class="skill-tag">Gemini</span>
         </div>
       </div>
       <div class="skill-card">
@@ -797,7 +966,7 @@
           <span class="project-tag">Java</span>
           <span class="project-tag">PostgreSQL</span>
           <span class="project-tag">Test Automation</span>
-          <span class="project-tag">CI/CD</span>
+          <!-- <span class="project-tag">CI/CD</span> -->
         </div>
       </div>
 
